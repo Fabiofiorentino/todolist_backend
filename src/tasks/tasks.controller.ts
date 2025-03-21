@@ -1,6 +1,7 @@
-import { 
-  Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, HttpStatus, HttpCode, 
-  Res
+import {
+  Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, HttpStatus, HttpCode,
+  Res,
+  Query
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -9,11 +10,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  constructor(private readonly tasksService: TasksService) { }
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.CREATED) 
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createTaskDto: CreateTaskDto, @Request() req) {
     const task = await this.tasksService.create(createTaskDto, req.user);
     return {
@@ -25,9 +26,9 @@ export class TasksController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK) 
-  async findAll(@Request() req) {
-    const tasks = await this.tasksService.findAll(req.user);
+  @HttpCode(HttpStatus.OK)
+  async findAll(@Request() req, @Query('status') status?: string) {
+    const tasks = await this.tasksService.findAll(req.user, status);
     return {
       statusCode: HttpStatus.OK,
       message: 'Lista de tarefas obtida com sucesso',
@@ -35,27 +36,29 @@ export class TasksController {
     };
   }
 
+
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK) 
+  @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: number, @Request() req) {
     const task = await this.tasksService.findOne(id, req.user);
     return {
       statusCode: HttpStatus.OK,
       message: 'Tarefa encontrada',
-      data: task,
+      task,
     };
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK) 
+  @HttpCode(HttpStatus.OK)
   async update(@Param('id') id: number, @Body() updateTaskDto: UpdateTaskDto, @Request() req) {
     const updatedTask = await this.tasksService.update(id, updateTaskDto, req.user);
     return {
       statusCode: HttpStatus.OK,
       message: 'Tarefa atualizada com sucesso',
-      data: updatedTask,
+      updatedTask,
     };
   }
 

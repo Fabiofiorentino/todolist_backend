@@ -11,11 +11,8 @@ export class UsersService {
     private usersRepository: Repository<User>, // Injeta o repositório TypeORM da entidade User
   ) { }
 
-  /**
-   * Cria um novo usuário no banco de dados.
-   * @param createUserDto - Dados para criação do usuário
-   * @returns O usuário recém-criado
-   */
+
+  //  Cria um novo usuário no banco de dados.
   async create(createUserDto: CreateUserDto): Promise<User> {
     // Cria um novo usuário com os dados fornecidos
     const user = this.usersRepository.create({
@@ -26,12 +23,8 @@ export class UsersService {
     return await this.usersRepository.save(user); // Salva o usuário no banco de dados
   }
 
-  /**
-   * Busca um usuário pelo ID.
-   * @param id - ID do usuário
-   * @returns O usuário encontrado
-   * @throws NotFoundException se o usuário não for encontrado
-   */
+
+  // Busca um usuário pelo ID.
   async findOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
@@ -40,11 +33,8 @@ export class UsersService {
     return user;
   }
 
-  /**
-   * Busca um usuário pelo e-mail.
-   * @param email - E-mail do usuário
-   * @returns O usuário encontrado ou undefined se não existir
-   */
+
+  // Busca um usuário pelo e-mail.
   async findByEmail(email: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ where: { email } }); // Retorna o usuário se encontrado
   }

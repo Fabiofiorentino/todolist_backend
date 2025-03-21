@@ -12,8 +12,8 @@ export class Task {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ default: 'pending' })
-  status: string;
+  @Column({ default: false })
+  status: boolean;
 
   @ManyToOne(() => User, (user) => user.tasks, { eager: true })
   user: User;
